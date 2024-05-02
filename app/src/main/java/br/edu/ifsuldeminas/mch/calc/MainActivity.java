@@ -105,49 +105,61 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        buttonSoma.setOnClickListener(v -> {
-            String expression = textViewUltimaExpressao.getText().toString();
-            try{
-                if(expression.isEmpty()) {
-                    continueExpression('+');
-                }
+        buttonSub.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
 
-                if(notTwoOperators(expression.charAt(expression.length() - 1))) {
-                    expression += '+';
-                    textViewUltimaExpressao.setText(expression);
-                    hasDot = false;
-                } else {
-                    char at = expression.charAt(expression.length() - 2);
-                    if (!(expression.charAt(expression.length() - 1) == '-' && at == '+' ||
-                            expression.charAt(expression.length() - 1) == '-' && at == '/' ||
-                            expression.charAt(expression.length() - 1) == '-' && at == '*'
-                    )) {
-                        expression = expression.substring(0, expression.length() - 1);
-                        expression += "+";
-                        textViewUltimaExpressao.setText(expression);
+                    if (!expressao.equals("")) {
+                        char ultimoChar = expressao.charAt(expressao.length() - 1);
+                        if (negativeNumber(ultimoChar)) {
+                            showScreen(btnSubtracao);
+                        } else {
+                            if (ultimoChar == '-') {
+                                expressao = expressao.substring(0, expressao.length() - 1);
+                            } else {
+                                if (haveOperator(ultimoChar)) {
+                                    expressao = expressao.substring(0, expressao.length() - 1);
+                                }
+                            }
+                            showScreen(btnSubtracao);
+                        }
+                        haveDot = false;
+                    } else {
+                        if (!textViewResultado.getText().equals("0")) {
+                            pickResultText(btnSubtracao);
+                        }
                     }
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
                 }
-            }catch (Exception e) {
-                Log.e(TAG, e.getMessage());
             }
-        });
+        }));
 
-        buttonSub.setOnClickListener(v -> {
-            String expression = textViewUltimaExpressao.getText().toString();
-            try{
-                if(expression.isEmpty()) {
-                    continueExpression('-');
-                }
+        buttonSoma.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    if (!expressao.equals("")) {
+                        char ultimoChar = expressao.charAt(expressao.length() - 1);
+                        if (!(ultimoChar == '-' && (expressao.charAt(expressao.length() - 2) == '*' || expressao.charAt(expressao.length() - 2) == '÷'))) {
+                            if (haveOperator(ultimoChar)) {
+                                expressao = expressao.substring(0, expressao.length() - 1);
+                            }
+                            showScreen(buttonSoma);
+                            haveDot = false;
+                        }
 
-                if (expression.equals("") || (expression.charAt(expression.length() - 1)) != '-' || notTwoOperators(expression.charAt(expression.length() - 1))) {
-                    expression += "-";
-                    textViewUltimaExpressao.setText(expression);
-                    hasDot = false;
+                    } else {
+                        if (!textViewResultado.getText().equals("0")) {
+                            pickResultText(buttonSoma);
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
                 }
-            }catch (Exception e) {
-                Log.e(TAG, e.getMessage());
             }
-        });
+        }));
 
         buttonMult.setOnClickListener(v -> {
             String expression = textViewUltimaExpressao.getText().toString();
